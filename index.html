@@ -1,6 +1,8 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <title>Tribal Trouble: Resurrected</title>
+    <link rel="shortcut icon" href="chicken_icon.png">
     <style>
         body {
             background-image: url("background.png");
@@ -213,8 +215,160 @@
             position: fixed;
             z-index: 10;
         }
+        .setup-map{
+            position: relative;
+            isolation: isolate;
+            margin: 28px auto 18px;
+            max-width: 1000px;
+            padding: 20px 0;
+        }
+        .setup-route{
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: visible;
+            pointer-events: none;
+        }
+        .setup-route path{
+            fill: none;
+            stroke: #E4BD83;
+            stroke-width: 5;
+            stroke-linecap: round;
+            stroke-dasharray: 3 13;
+            filter: drop-shadow(0 2px 3px #000000);
+            opacity: 0.9;
+        }
+        .setup-step{
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 78%;
+            min-height: 180px;
+            margin: 10px 0 54px auto;
+            gap: 22px;
+        }
+        .setup-step:nth-of-type(even){
+            margin-left: 0;
+            margin-right: auto;
+            flex-direction: row-reverse;
+        }
+        .setup-card{
+            flex: 1;
+            min-width: 0;
+            padding: 16px;
+            border: 1px solid #D9B58A99;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #241B16ED, #090B0BDC);
+            box-shadow: 0 12px 28px #0008, inset 0 1px #FFFFFF20;
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+        }
+        .setup-step:nth-of-type(even) .setup-card{
+            text-align: right;
+        }
+        .setup-card h3{
+            color: #FFF0D9;
+            font-size: 23px;
+            margin: 3px 0 8px;
+            text-shadow: 1px 2px #000000;
+        }
+        .setup-card p{
+            color: #EEE1D1;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 0;
+        }
+        .setup-images{
+            flex: 1.2;
+            min-width: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+            gap: 10px;
+        }
+        .setup-images img{
+            display: block;
+            width: 100%;
+            height: 155px;
+            object-fit: cover;
+            margin: 0;
+            border: 2px solid #B99A75;
+            border-radius: 12px;
+            box-shadow: 0 8px 18px #0009;
+            cursor: zoom-in;
+            transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+        }
+        .setup-images img:hover{
+            transform: translateY(-5px) rotate(-1deg);
+            border-color: #FFF0D9;
+            box-shadow: 0 13px 25px #000C;
+        }
+        .setup-pin{
+            flex: 0 0 48px;
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border: 3px solid #F2D2A5;
+            border-radius: 50%;
+            background: #654832;
+            color: #FFF4DF;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 0 0 7px #2C2119AA, 0 5px 14px #0009;
+        }
+        .setup-step:nth-of-type(even).setup-pin{
+            order: 0;
+        }
+        @media (max-width: 700px){
+            .setup-map{
+                padding: 8px 0 8px 20px; 
+            }
+            .setup-route{ 
+                left: -10px;
+                width: calc(100% + 10px);
+            }
+            .setup-step,
+            .setup-step:nth-of-type(even){
+                width: 100%;
+                margin: 0 0 30px;
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .setup-pin{
+                flex-basis: 38px;
+                width: 38px;
+                height: 38px;
+                font-size: 13px;
+                margin-top: 12px;
+            }
+            .setup-step:nth-of-type(even).setup-card{ 
+                text-align: left; 
+            }
+            .setup-card{ 
+                padding: 12px;
+            }
+            .setup-card h3{ 
+                font-size: 19px;
+            }
+            .setup-card p{ 
+                font-size: 14px;
+            }
+            .setup-images{ 
+                grid-template-columns: 1fr;
+            }
+            .setup-images img{ 
+                height: 130px;
+            }
+        }
+        @media (prefers-reduced-motion: reduce){
+            .setup-images img{ 
+                transition: none;
+            }
+        }
     </style>
-
     <script>
         function showAbout() {
             const about = document.getElementById("about");
@@ -628,30 +782,78 @@
         <a href="https://web.archive.org/web/20070729233824/http://tribaltrouble.com" target="_blank">Archived version</a><br /><br />
 
         <h2>The setup</h2>
-        <div class='screenshots'>
-            The game is set in an Island in the middle of the ocean<br>
-            <img class='screenshot' src='01.jpg' /><br>
-            There are several tribes there. Some are native tribes,<br>
-            <img class='screenshot' src='11.jpg' /><br>
-            others are vikings.<br>
-            <img class='screenshot' src='02.jpg' /><br>
-            They're building colonies ..<br>
-            <img class='screenshot' src='03.jpg' /><br>
-            collecting resources ..<br>
-            <img class='screenshot' src='04.jpg' /><br>
-            <img class='screenshot' src='05.jpg' /><br>
-            building armies ..<br>
-            <img class='screenshot' src='06.jpg' /><br>
-            Only to fight the other tribes over control of the island<br>
-            <img class='screenshot' src='07.jpg' /><br>
-            <img class='screenshot' src='08.jpg' /><br>
-            <img class='screenshot' src='09.jpg' /><br>
-            <img class='screenshot' src='10.jpg' /><br>
+        <div class="setup-map">
+            <svg class="setup-route" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M760 70 C960 110 930 165 500 200 S70 320 250 385 S940 485 730 570 S80 700 300 770 S650 825 620 850"></path>
+            </svg>
+            <div class="setup-step">
+                <div class="setup-pin">01</div>
+                <div class="setup-card">
+                    <h3>An island in the ocean</h3>
+                    <p>The whole adventure begins on one island, surrounded by endless water.</p>
+                </div>
+                <div class="setup-images">
+                    <a href="01.jpg" target="_blank"><img src="01.jpg"></a>
+                </div>
+            </div>
+            <div class="setup-step">
+                <div class="setup-pin">02</div>
+                <div class="setup-card">
+                    <h3>Different tribes</h3>
+                    <p>Native tribes and Vikings share the island, but they won't share it peacefully.</p>
+                </div>
+                <div class="setup-images">
+                    <a href="11.jpg" target="_blank"><img src="11.jpg"></a>
+                    <a href="02.jpg" target="_blank"><img src="02.jpg"></a>
+                </div>
+            </div>
+            <div class="setup-step">
+                <div class="setup-pin">03</div>
+                <div class="setup-card">
+                    <h3>Build your colonies</h3>
+                    <p>Establish settlements and turn a small foothold into a growing base.</p>
+                </div>
+                <div class="setup-images">
+                    <a href="03.jpg" target="_blank"><img src="03.jpg"></a>
+                </div>
+            </div>
+            <div class="setup-step">
+                <div class="setup-pin">04</div>
+                <div class="setup-card">
+                    <h3>Collect resources</h3>
+                    <p>Gather what your people need to keep expanding and prepare for what's next.</p>
+                </div>
+                <div class="setup-images">
+                    <a href="04.jpg" target="_blank"><img src="04.jpg"></a>
+                    <a href="05.jpg" target="_blank"><img src="05.jpg"></a>
+                </div>
+            </div>
+            <div class="setup-step">
+                <div class="setup-pin">05</div>
+                <div class="setup-card">
+                    <h3>Build your armies</h3>
+                    <p>Grow your forces, because the other tribes are doing the same.</p>
+                </div>
+                <div class="setup-images">
+                    <a href="06.jpg" target="_blank"><img src="06.jpg"></a>
+                </div>
+            </div>
+            <div class="setup-step">
+                <div class="setup-pin">06</div>
+                <div class="setup-card">
+                    <h3>Fight for the island</h3>
+                    <p>In the end, every tribe wants control. The route leads to war.</p>
+                </div>
+                <div class="setup-images">
+                    <a href="07.jpg" target="_blank"><img src="07.jpg"></a>
+                    <a href="08.jpg" target="_blank"><img src="08.jpg"></a>
+                    <a href="09.jpg" target="_blank"><img src="09.jpg"></a>
+                    <a href="10.jpg" target="_blank"><img src="10.jpg"></a>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div id="show-image" class="popup">
-    </div>
+    <div id="show-image" class="popup"></div>
 
 
     <div id="download" class="content">
@@ -770,5 +972,4 @@
         <a href="https://discord.gg/j8PZyGBZt5" target="_blank"><img width="20" height="20" src="discord.png" /> Discord server</a>
     </div>
 </body>
-
 </html>
