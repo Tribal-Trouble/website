@@ -1,975 +1,1170 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Tribal Trouble: Resurrected</title>
-    <link rel="shortcut icon" href="chicken_icon.png">
-    <style>
-        body {
-            background-image: url("background.png");
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-attachment: fixed;
-            background-color: rgba(255, 255, 255, 0.2);
-            background-blend-mode: lighten;
-            font-family: "Tahoma";
-            text-shadow: 1px 1px #ddda;
-            cursor: url("cursor.png"), auto;
-            font-size: 20px;
-            color: white;
-            text-shadow: 1px 1px black;
-        }
-
-        h2 {
-            text-shadow: none;
-        }
-
-        .os-logo {
-            height: 70px;
-        }
-
-        .downloadable {
-            text-align: center;
-            padding-left: 10px;
-            padding-right: 10px;
-        }
-
-        .downloadable:hover {
-            background-color: #FFF9;
-            box-shadow: 0px 0px 5px 3px #FFF9;
-        }
-
-        .nav_button {
-            background-color: #836353;
-            background-image: linear-gradient(#836353, #b69686);
-            text-align: center;
-            vertical-align: center;
-            width: 25%;
-            height: 50px;
-            border-radius: 7px;
-            border: none;
-            color: black;
-            text-shadow: 1px 1px #0007;
-            font-size: 23px;
-            color: white;
-        }
-
-        .nav_button:hover {
-            font-weight: bold;
-            background-color: #838353;
-            background-image: linear-gradient(#838353, #b69886);
-        }
-
-        .nav_table {
-            width: 60%;
-            right: 10px;
-            top: 10px;
-            position: fixed;
-        }
-
-        .title {
-            width: 300px;
-        }
-
-        #download {
-            display: none;
-        }
-
-        #scores {
-            display: none;
-        }
-
-        #player {
-            display: none;
-            position: absolute;
-        }
-
-        #contribute {
-            display: none;
-        }
-
-        .screenshot {
-            height: 25vh;
-            margin: 10px;
-            border-radius: 15px;
-            border: 2px solid grey;
-        }
-
-        .screenshot:hover {
-            border: 2px solid white;
-        }
-
-        .content {
-            margin-top: 40px;
-            border-radius: 15px;
-            border: inset 2px;
-            padding: 10px;
-            margin-left: 10px;
-            margin-right: 10px;
-            -webkit-backdrop-filter: blur(7px);
-            backdrop-filter: blur(7px);
-            background: #0007;
-            vertical-align: center;
-            min-height: 50%;
-            overflow: auto;
-            color: white;
-            text-shadow: 2px 2px black;
-        }
-
-        .popup {
-            box-shadow: 5px 5px 20px 2px #000;
-            margin-top: 40px;
-            border-radius: 15px;
-            border: inset 2px;
-            padding: 10px;
-            margin-left: 10px;
-            margin-right: 10px;
-            -webkit-backdrop-filter: blur(7px);
-            backdrop-filter: blur(7px);
-            background: #0007;
-            vertical-align: center;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            min-width: 10vw;
-            min-height: 10vh;
-            position: fixed;
-            color: white;
-            text-shadow: 1px 1px black;
-            display: none;
-        }
-
-        .popup-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-        }
-
-        .sort-arrow {
-            position: relative;
-            right: 0px;
-            float: right;
-            align-items: center;
-            display: none;
-        }
-
-        .tableheader {
-            background-color: #836353;
-            background-image: linear-gradient(#836353, #b69686);
-            padding-top: 2px;
-            padding-bottom: 2px;
-            padding-left: 20px;
-            padding-right: 20px;
-            // min-width: 200px;
-            color: white;
-            text-shadow: 2px 2px black;
-            border-style: outset;
-            border-color: #a99489;
-            border-width: 1px;
-        }
-
-        tr.inforow:nth-child(odd) {
-            background-color: #FFFFFF19;
-        }
-
-        tr.inforow:nth-child(even) {
-            background-color: #c8c8c819;
-        }
-
-        a {
-            color: white;
-            text-shadow: 1px 1px black;
-        }
-
-        a:visited {
-            color: #FFFA;
-            text-shadow: 1px 1px #000A;
-        }
-
-        tr.inforow {
-            color: white;
-            text-shadow: 1px 1px black;
-        }
-
-        .pname,
-        .pscore {
-            background-color: #482b04;
-            padding: 2px;
-            padding-left: 5px;
-            background: #99f2;
-        }
-
-        .link_button {
-            text-align: center;
-            vertical-align: center;
-            width: 50px;
-            height: 50px;
-            border-radius: 7px;
-            border: none;
-            z-index: 10;
-        }
-
-        .link_table {
-            width: 330px;
-            right: 20px;
-            bottom: 10px;
-            position: fixed;
-            z-index: 10;
-        }
-        .setup-map{
-            position: relative;
-            isolation: isolate;
-            margin: 28px auto 18px;
-            max-width: 1000px;
-            padding: 20px 0;
-        }
-        .setup-route{
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: visible;
-            pointer-events: none;
-        }
-        .setup-route path{
-            fill: none;
-            stroke: #E4BD83;
-            stroke-width: 5;
-            stroke-linecap: round;
-            stroke-dasharray: 3 13;
-            filter: drop-shadow(0 2px 3px #000000);
-            opacity: 0.9;
-        }
-        .setup-step{
-            position: relative;
-            display: flex;
-            align-items: center;
-            width: 78%;
-            min-height: 180px;
-            margin: 10px 0 54px auto;
-            gap: 22px;
-        }
-        .setup-step:nth-of-type(even){
-            margin-left: 0;
-            margin-right: auto;
-            flex-direction: row-reverse;
-        }
-        .setup-card{
-            flex: 1;
-            min-width: 0;
-            padding: 16px;
-            border: 1px solid #D9B58A99;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #241B16ED, #090B0BDC);
-            box-shadow: 0 12px 28px #0008, inset 0 1px #FFFFFF20;
-            backdrop-filter: blur(7px);
-            -webkit-backdrop-filter: blur(7px);
-        }
-        .setup-step:nth-of-type(even) .setup-card{
-            text-align: right;
-        }
-        .setup-card h3{
-            color: #FFF0D9;
-            font-size: 23px;
-            margin: 3px 0 8px;
-            text-shadow: 1px 2px #000000;
-        }
-        .setup-card p{
-            color: #EEE1D1;
-            font-size: 16px;
-            line-height: 1.5;
-            margin: 0;
-        }
-        .setup-images{
-            flex: 1.2;
-            min-width: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
-            gap: 10px;
-        }
-        .setup-images img{
-            display: block;
-            width: 100%;
-            height: 155px;
-            object-fit: cover;
-            margin: 0;
-            border: 2px solid #B99A75;
-            border-radius: 12px;
-            box-shadow: 0 8px 18px #0009;
-            cursor: zoom-in;
-            transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
-        }
-        .setup-images img:hover{
-            transform: translateY(-5px) rotate(-1deg);
-            border-color: #FFF0D9;
-            box-shadow: 0 13px 25px #000C;
-        }
-        .setup-pin{
-            flex: 0 0 48px;
-            width: 48px;
-            height: 48px;
-            display: grid;
-            place-items: center;
-            border: 3px solid #F2D2A5;
-            border-radius: 50%;
-            background: #654832;
-            color: #FFF4DF;
-            font-weight: bold;
-            font-size: 16px;
-            box-shadow: 0 0 0 7px #2C2119AA, 0 5px 14px #0009;
-        }
-        .setup-step:nth-of-type(even).setup-pin{
-            order: 0;
-        }
-        @media (max-width: 700px){
+    <head>
+        <meta charset="utf-8">
+        <title>Tribal Trouble: Resurrected</title>
+        <link rel="shortcut icon" href="chicken_icon.png">
+        <style>
+            body{
+                background-image: url("background.png");
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-attachment: fixed;
+                background-color: rgba(255, 255, 255, 0.2);
+                background-blend-mode: lighten;
+                font-family: "Tahoma";
+                text-shadow: 1px 1px #DDDA;
+                cursor: url("cursor.png"), auto;
+                font-size: 20px;
+                color: white;
+                text-shadow: 1px 1px black;
+            }
+            h2{
+                text-shadow: none;
+            }
+            .os-logo{
+                height: 70px;
+            }
+            .downloadable{
+                text-align: center;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .downloadable:hover{
+                background-color: #FFF9;
+                box-shadow: 0px 0px 5px 3px #FFF9;
+            }
+            .nav_button{
+                background-color: #836353;
+                background-image: linear-gradient(#836353, #B69686);
+                text-align: center;
+                vertical-align: center;
+                width: 25%;
+                height: 50px;
+                border-radius: 7px;
+                border: none;
+                color: black;
+                text-shadow: 1px 1px #0007;
+                font-size: 23px;
+                color: white;
+            }
+            .nav_button:hover{
+                font-weight: bold;
+                background-color: #838353;
+                background-image: linear-gradient(#838353, #B69886);
+            }
+            .nav_table{
+                width: 60%;
+                right: 10px;
+                top: 10px;
+                position: fixed;
+            }
+            .title{
+                width: 300px;
+            }
+            #download{
+                display: none;
+            }
+            #scores{
+                display: none;
+            }
+            #player{
+                display: none;
+                position: absolute;
+            }
+            #contribute{
+                display: none;
+            }
+            .screenshot{
+                height: 25vh;
+                margin: 10px;
+                border-radius: 15px;
+                border: 2px solid grey;
+            }
+            .screenshot:hover{
+                border: 2px solid white;
+            }
+            .content{
+                margin-top: 40px;
+                border-radius: 15px;
+                border: inset 2px;
+                padding: 10px;
+                margin-left: 10px;
+                margin-right: 10px;
+                -webkit-backdrop-filter: blur(7px);
+                backdrop-filter: blur(7px);
+                background: #0007;
+                vertical-align: center;
+                min-height: 50%;
+                overflow: auto;
+                color: white;
+                text-shadow: 2px 2px black;
+            }
+            .popup{
+                box-shadow: 5px 5px 20px 2px #000;
+                margin-top: 40px;
+                border-radius: 15px;
+                border: inset 2px;
+                padding: 10px;
+                margin-left: 10px;
+                margin-right: 10px;
+                -webkit-backdrop-filter: blur(7px);
+                backdrop-filter: blur(7px);
+                background: #0007;
+                vertical-align: center;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                min-width: 10vw;
+                min-height: 10vh;
+                position: fixed;
+                color: white;
+                text-shadow: 1px 1px black;
+                display: none;
+            }
+            .popup-btn{
+                position: absolute;
+                top: 5px;
+                right: 5px;
+            }
+            .sort-arrow{
+                position: relative;
+                right: 0px;
+                float: right;
+                align-items: center;
+                display: none;
+            }
+            .tableheader{
+                background-color: #836353;
+                background-image: linear-gradient(#836353, #B69686);
+                padding-top: 2px;
+                padding-bottom: 2px;
+                padding-left: 20px;
+                padding-right: 20px;
+                // min-width: 200px;
+                color: white;
+                text-shadow: 2px 2px black;
+                border-style: outset;
+                border-color: #A99489;
+                border-width: 1px;
+            }
+            tr.inforow:nth-child(odd){
+                background-color: #FFFFFF19;
+            }
+            tr.inforow:nth-child(even){
+                background-color: #C8C8C819;
+            }
+            a{
+                color: white;
+                text-shadow: 1px 1px black;
+            }
+            a:visited{
+                color: #FFFA;
+                text-shadow: 1px 1px #000A;
+            }
+            tr.inforow{
+                color: white;
+                text-shadow: 1px 1px black;
+            }
+            .pname, .pscore{
+                background-color: #482B04;
+                padding: 2px;
+                padding-left: 5px;
+                background: #99F2;
+            }
+            .link_button{
+                text-align: center;
+                vertical-align: center;
+                width: 50px;
+                height: 50px;
+                border-radius: 7px;
+                border: none;
+                z-index: 10;
+            }
+            .link_table{
+                width: 330px;
+                right: 20px;
+                bottom: 10px;
+                position: fixed;
+                z-index: 10;
+            }
             .setup-map{
-                padding: 8px 0 8px 20px; 
+                position: relative;
+                isolation: isolate;
+                margin: 28px auto 18px;
+                max-width: 1000px;
+                padding: 20px 0;
             }
-            .setup-route{ 
-                left: -10px;
-                width: calc(100% + 10px);
-            }
-            .setup-step,
-            .setup-step:nth-of-type(even){
+            .setup-route{
+                position: absolute;
+                inset: 0;
                 width: 100%;
-                margin: 0 0 30px;
-                flex-direction: row;
-                align-items: flex-start;
-                gap: 12px;
+                height: 100%;
+                z-index: -1;
+                overflow: visible;
+                pointer-events: none;
+            }
+            .setup-route path{
+                fill: none;
+                stroke: #E4BD83;
+                stroke-width: 5;
+                stroke-linecap: round;
+                stroke-dasharray: 3 13;
+                filter: drop-shadow(0 2px 3px #000000);
+                opacity: 0.9;
+            }
+            .setup-step{
+                position: relative;
+                display: flex;
+                align-items: center;
+                width: 78%;
+                min-height: 180px;
+                margin: 10px 0 54px auto;
+                gap: 22px;
+            }
+            .setup-step:nth-of-type(even){
+                margin-left: 0;
+                margin-right: auto;
+                flex-direction: row-reverse;
+            }
+            .setup-card{
+                flex: 1;
+                min-width: 0;
+                padding: 16px;
+                border: 1px solid #D9B58A99;
+                border-radius: 16px;
+                background: linear-gradient(135deg, #241B16ED, #090B0BDC);
+                box-shadow: 0 12px 28px #0008, inset 0 1px #FFFFFF20;
+                backdrop-filter: blur(7px);
+                -webkit-backdrop-filter: blur(7px);
+            }
+            .setup-step:nth-of-type(even) .setup-card{
+                text-align: right;
+            }
+            .setup-card h3{
+                color: #FFF0D9;
+                font-size: 23px;
+                margin: 3px 0 8px;
+                text-shadow: 1px 2px #000000;
+            }
+            .setup-card p{
+                color: #EEE1D1;
+                font-size: 16px;
+                line-height: 1.5;
+                margin: 0;
+            }
+            .setup-images{
+                flex: 1.2;
+                min-width: 0;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+                gap: 10px;
+            }
+            .setup-images img{
+                display: block;
+                width: 100%;
+                height: 155px;
+                object-fit: cover;
+                margin: 0;
+                border: 2px solid #B99A75;
+                border-radius: 12px;
+                box-shadow: 0 8px 18px #0009;
+                cursor: zoom-in;
+                transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+            }
+            .setup-images img:hover{
+                transform: translateY(-5px) rotate(-1deg);
+                border-color: #FFF0D9;
+                box-shadow: 0 13px 25px #000C;
             }
             .setup-pin{
-                flex-basis: 38px;
-                width: 38px;
-                height: 38px;
+                flex: 0 0 48px;
+                width: 48px;
+                height: 48px;
+                display: grid;
+                place-items: center;
+                border: 3px solid #F2D2A5;
+                border-radius: 50%;
+                background: #654832;
+                color: #FFF4DF;
+                font-weight: bold;
+                font-size: 16px;
+                box-shadow: 0 0 0 7px #2C2119AA, 0 5px 14px #0009;
+            }
+            .setup-step:nth-of-type(even).setup-pin{
+                order: 0;
+            }
+            @media (max-width: 700px){
+                .setup-map{
+                    padding: 8px 0 8px 20px; 
+                }
+                .setup-route{ 
+                    left: -10px;
+                    width: calc(100% + 10px);
+                }
+                .setup-step, .setup-step:nth-of-type(even){
+                    width: 100%;
+                    margin: 0 0 30px;
+                    flex-direction: row;
+                    align-items: flex-start;
+                    gap: 12px;
+                }
+                .setup-pin{
+                    flex-basis: 38px;
+                    width: 38px;
+                    height: 38px;
+                    font-size: 13px;
+                    margin-top: 12px;
+                }
+                .setup-step:nth-of-type(even).setup-card{ 
+                    text-align: left; 
+                }
+                .setup-card{ 
+                    padding: 12px;
+                }
+                .setup-card h3{ 
+                    font-size: 19px;
+                }
+                .setup-card p{ 
+                    font-size: 14px;
+                }
+                .setup-images{ 
+                    grid-template-columns: 1fr;
+                }
+                .setup-images img{ 
+                    height: 130px;
+                }
+            }
+            @media (prefers-reduced-motion: reduce){
+                .setup-images img{ 
+                    transition: none;
+                }
+            }
+            .credits{
+                --line: #E4BD83;
+                --gap: 28px;
+                max-width: 1100px;
+                margin: 26px auto 10px;
+            }
+            .credits-root{
+                position: relative;
+                width: fit-content;
+                max-width: 100%;
+                margin: 0 auto;
+                padding: 12px 28px;
+                text-align: center;
+                border: 1px solid #D9B58A99;
+                border-radius: 16px;
+                background: linear-gradient(135deg, #241B16ED, #090B0BDC);
+                box-shadow: 0 12px 28px #0008, inset 0 1px #FFFFFF20, 0 0 18px #E4BD8340;
+            }
+            .credits-root b{
+                display: block;
+                color: #FFF0D9;
+                font-size: 23px;
+                text-shadow: 1px 2px #000000;
+            }
+            .credits-root span{
+                display: block;
+                margin-top: 4px;
+                color: #EEE1D1;
+                font-size: 15px;
+            }
+            .credits-root::after{
+                content: "";
+                position: absolute;
+                left: 50%;
+                top: 100%;
+                height: var(--gap);
+                border-left: 3px solid var(--line);
+                transform: translateX(-50%);
+                filter: drop-shadow(0 2px 3px #000000);
+            }
+            .credits-tree{
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                margin-top: var(--gap);
+            }
+            .credits-branch{
+                position: relative;
+                padding: var(--gap) 8px 0;
+            }
+            .credits-branch::before{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                border-top: 3px solid var(--line);
+                filter: drop-shadow(0 2px 3px #000000);
+            }
+            .credits-branch:first-child::before{ 
+                left: 50%; 
+            }
+            .credits-branch:last-child::before{ 
+                right: 50%; 
+            }
+            .credits-branch::after{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 50%;
+                height: var(--gap);
+                border-left: 3px solid var(--line);
+                transform: translateX(-50%);
+                filter: drop-shadow(0 2px 3px #000000);
+            }
+            .credits-card{
+                height: 100%;
+                box-sizing: border-box;
+                overflow: hidden;
+                border: 1px solid #D9B58A99;
+                border-radius: 16px;
+                background: linear-gradient(135deg, #241B16ED, #090B0BDC);
+                box-shadow: 0 12px 28px #0008, inset 0 1px #FFFFFF20;
+                backdrop-filter: blur(7px);
+                -webkit-backdrop-filter: blur(7px);
+                transition: border-color .25s ease, box-shadow .25s ease;
+            }
+            .credits-head{
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 14px;
+                background-color: #836353;
+                background-image: linear-gradient(#836353, #B69686);
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                text-shadow: 2px 2px black;
+                border-bottom: 1px solid #A99489;
+            }
+            .credits-list{
+                list-style: none;
+                margin: 0;
+                padding: 8px 0;
+            }
+            .credits-list li{
+                padding: 6px 14px 6px 28px;
+                position: relative;
+                color: #EEE1D1;
+                font-size: 16px;
+                line-height: 1.3;
+            }
+            .credits-list li:nth-child(odd){ 
+                background: #FFFFFF12; 
+            }
+            .credits-list li::before{
+                content: "";
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                width: 7px;
+                height: 7px;
+                margin-top: -4px;
+                background: var(--line);
+                list-style-type: square;
+            }
+            .credits-list, .nick{
+                display: block;
+                color: #E4BD83;
                 font-size: 13px;
-                margin-top: 12px;
             }
-            .setup-step:nth-of-type(even).setup-card{ 
-                text-align: left; 
+            .credits-links{
+                margin-top: 34px;
             }
-            .setup-card{ 
-                padding: 12px;
-            }
-            .setup-card h3{ 
-                font-size: 19px;
-            }
-            .setup-card p{ 
-                font-size: 14px;
-            }
-            .setup-images{ 
-                grid-template-columns: 1fr;
-            }
-            .setup-images img{ 
-                height: 130px;
-            }
-        }
-        @media (prefers-reduced-motion: reduce){
-            .setup-images img{ 
-                transition: none;
-            }
-        }
-    </style>
-    <script>
-        function showAbout() {
-            const about = document.getElementById("about");
-            const download = document.getElementById("download");
-            const scores = document.getElementById("scores");
-            const player = document.getElementById("player");
-            const contribute = document.getElementById("contribute");
-            about.style.display = "block";
-            download.style.display = "none";
-            scores.style.display = "none";
-            player.style.display = "none";
-            contribute.style.display = "none";
-            window.location.hash = '#about';
-        }
-
-        function showDownload() {
-            const about = document.getElementById("about");
-            const download = document.getElementById("download");
-            const scores = document.getElementById("scores");
-            const player = document.getElementById("player");
-            const contribute = document.getElementById("contribute");
-            about.style.display = "none";
-            download.style.display = "block";
-            scores.style.display = "none";
-            contribute.style.display = "none";
-            player.style.display = "none";
-            window.location.hash = '#download';
-        }
-
-        function showContribute() {
-            const about = document.getElementById("about");
-            const download = document.getElementById("download");
-            const scores = document.getElementById("scores");
-            const player = document.getElementById("player");
-            const contribute = document.getElementById("contribute");
-            about.style.display = "none";
-            download.style.display = "none";
-            scores.style.display = "none";
-            contribute.style.display = "block";
-            player.style.display = "none";
-            window.location.hash = '#contribute';
-        }
-
-        function processLocalTimes(container) {
-            (container || document).querySelectorAll('.localtime').forEach(function(el) {
-                var utcTime = el.getAttribute('data-time');
-                if (utcTime) {
-                    var date = new Date(utcTime.replace(' ', 'T') + 'Z');
-                    var now = new Date();
-                    var isToday = date.getDate() === now.getDate() &&
-                        date.getMonth() === now.getMonth() &&
-                        date.getFullYear() === now.getFullYear();
-                    var isYesterday = date.getDate() === now.getDate() - 1 &&
-                        date.getMonth() === now.getMonth() &&
-                        date.getFullYear() === now.getFullYear();
-                    if (isToday) {
-                        el.textContent = 'Today @ ' + date.toLocaleTimeString();
-                    } else if (isYesterday) {
-                        el.textContent = 'Yesterday @ ' + date.toLocaleTimeString();
-                    } else {
-                        el.textContent += ' (' + date.toLocaleString() + ')';
-                    }
+            @media (max-width: 1000px){
+                .credits-tree{ 
+                    grid-template-columns: repeat(2, 1fr); 
                 }
-            });
-        }
-
-        function playerURL(pname, offset) {
-            if (offset == null) {
-                offset = 0;
+                .credits-branch{ 
+                    padding-bottom: 22px; 
+                }
+                .credits-branch::before, .credits-branch:first-child::before, .credits-branch:last-child::before{ 
+                    left: 0; right: 0; 
+                }
+                .credits-branch:nth-child(1)::before{ 
+                    left: 50%; right: 0; 
+                }
+                .credits-branch:nth-child(2)::before{ 
+                    left: 0; right: 50%; 
+                }
+                .credits-branch:nth-child(3)::before{ 
+                    left: 50%; right: 0; 
+                }
+                .credits-branch:nth-child(4)::before{ 
+                    left: 0; right: 50%; 
+                }
             }
-            return "<a href='#player#" + pname + "#" + offset + "'>" + pname + "</a>";
-        }
-
-        let players_offset = 0;
-        let players_sort = 0;
-        let players_column = 2;
-
-        function sortBy(col) {
-            players_offset = 0;
-            if (players_column == col) {
-                players_sort = 1 - players_sort;
-            } else {
-                players_column = col;
-                players_sort = 0;
+            @media (max-width: 700px){
+                .credits-root{ 
+                    margin: 0; 
+                }
+                .credits-root::after{ 
+                    left: 20px; transform: none; 
+                }
+                .credits-tree{ 
+                    grid-template-columns: 1fr; padding-left: 34px; 
+                }
+                .credits-branch{ 
+                    padding: 0 0 22px; 
+                }
+                .credits-branch::before, .credits-branch:nth-child(n)::before{
+                    top: 28px;
+                    left: -14px;
+                    right: auto;
+                    width: 14px;
+                }
+                .credits-branch::after{
+                    top: 0;
+                    left: -14px;
+                    height: 100%;
+                    transform: none;
+                }
+                .credits-branch:last-child::after{ 
+                    height: 29px; 
+                }
             }
-            updatePlayers();
-        }
+            @media (prefers-reduced-motion: reduce){
+                .credits-card{ 
+                    transition: none; 
+                }
+            }
+        </style>
+        <script>
+            function showAbout() {
+                const about = document.getElementById("about");
+                const download = document.getElementById("download");
+                const scores = document.getElementById("scores");
+                const player = document.getElementById("player");
+                const contribute = document.getElementById("contribute");
+                about.style.display = "block";
+                download.style.display = "none";
+                scores.style.display = "none";
+                player.style.display = "none";
+                contribute.style.display = "none";
+                window.location.hash = '#about';
+            }
 
-        function updatePlayers() {
-            if (players_offset < 0) {
+            function showDownload() {
+                const about = document.getElementById("about");
+                const download = document.getElementById("download");
+                const scores = document.getElementById("scores");
+                const player = document.getElementById("player");
+                const contribute = document.getElementById("contribute");
+                about.style.display = "none";
+                download.style.display = "block";
+                scores.style.display = "none";
+                contribute.style.display = "none";
+                player.style.display = "none";
+                window.location.hash = '#download';
+            }
+
+            function showContribute() {
+                const about = document.getElementById("about");
+                const download = document.getElementById("download");
+                const scores = document.getElementById("scores");
+                const player = document.getElementById("player");
+                const contribute = document.getElementById("contribute");
+                about.style.display = "none";
+                download.style.display = "none";
+                scores.style.display = "none";
+                contribute.style.display = "block";
+                player.style.display = "none";
+                window.location.hash = '#contribute';
+            }
+
+            function processLocalTimes(container) {
+                (container || document).querySelectorAll('.localtime').forEach(function(el) {
+                    var utcTime = el.getAttribute('data-time');
+                    if (utcTime) {
+                        var date = new Date(utcTime.replace(' ', 'T') + 'Z');
+                        var now = new Date();
+                        var isToday = date.getDate() === now.getDate() &&
+                            date.getMonth() === now.getMonth() &&
+                            date.getFullYear() === now.getFullYear();
+                        var isYesterday = date.getDate() === now.getDate() - 1 &&
+                            date.getMonth() === now.getMonth() &&
+                            date.getFullYear() === now.getFullYear();
+                        if (isToday) {
+                            el.textContent = 'Today @ ' + date.toLocaleTimeString();
+                        } else if (isYesterday) {
+                            el.textContent = 'Yesterday @ ' + date.toLocaleTimeString();
+                        } else {
+                            el.textContent += ' (' + date.toLocaleString() + ')';
+                        }
+                    }
+                });
+            }
+
+            function playerURL(pname, offset) {
+                if (offset == null) {
+                    offset = 0;
+                }
+                return "<a href='#player#" + pname + "#" + offset + "'>" + pname + "</a>";
+            }
+
+            let players_offset = 0;
+            let players_sort = 0;
+            let players_column = 2;
+
+            function sortBy(col) {
                 players_offset = 0;
-            }
-            var elements = document.getElementsByClassName('sort-arrow');
-            for (var el of elements) {
-                el.style.display = 'none';
-            }
-            var arrow = document.getElementById("sort-" + players_column + "-" + players_sort);
-            arrow.style.display = 'block';
-            const scoresTable = document.getElementById("scorestable");
-            fetch("players.php?offset=" + players_offset + "&column=" + players_column + "&sort=" + players_sort)
-                .then((res) => res.json())
-                .then((res) => {
-                    if (res.length == 0) {
-                        players_offset -= 10;
-                        return;
-                    }
-                    const rows = scoresTable.getElementsByTagName('tr');
-                    while (rows.length > 1) {
-                        scoresTable.deleteRow(1);
-                    }
-                    for (var i = 0; i < res.length; i++) {
-                        let row = scoresTable.insertRow();
-                        let num = row.insertCell();
-                        let nick = row.insertCell();
-                        let wins = row.insertCell();
-                        let losses = row.insertCell();
-                        let rating = row.insertCell();
-                        row.className = 'inforow';
-                        num.className = 'pscore';
-                        num.innerHTML = (i + players_offset + 1);
-                        nick.className = 'pscore';
-                        nick.innerHTML = playerURL(res[i].nick);
-                        wins.className = 'pscore';
-                        wins.innerHTML = res[i].wins;
-                        losses.className = 'pscore';
-                        losses.innerHTML = res[i].losses;
-                        rating.className = 'pscore';
-                        rating.innerHTML = res[i].rating;
-                    }
-                    processLocalTimes(scoresTable);
-                });
-        }
-
-        function formatTeam(arr) {
-            const counts = arr.reduce((acc, item) => {
-                acc[item] = (acc[item] || 0) + 1;
-                return acc;
-            }, {});
-            return Object.entries(counts).map(([item, count]) => count > 1 ? `${count} ${item} together` : item).join(' / ');
-        }
-
-        function formatAllTeams(arr) {
-            const counts = arr.reduce((acc, item) => {
-                acc[item] = (acc[item] || 0) + 1;
-                return acc;
-            }, {});
-            return Object.entries(counts).map(([item, count]) => count > 1 ? `${count} of (${item})` : item).join(' VS ');
-        }
-
-        function gameInfo(row) {
-            var all = '';
-            var winner = '';
-            var teams = new Map();
-            var winnerId = row['winner'];
-            var players = row['players'];
-            var grouping = new Map();
-            for (var i = 0; i < players.length; i++) {
-                const name = players[i]['nick'];
-                const team = players[i]['team'];
-                if (!teams.has(team)) {
-                    teams.set(team, []);
-                }
-                teams.get(team).push(playerURL(name));
-            }
-            var formatted = [];
-            teams.forEach((text, team) => {
-                formatted.push(formatTeam(text));
-                if (winnerId == team) {
-                    winner = formatTeam(text);
-                }
-            });
-            return [formatAllTeams(formatted), winner];
-        }
-
-        let games_offset = 0;
-
-        function updateGames() {
-            if (games_offset < 0) {
-                games_offset = 0;
-            }
-            const gamesTable = document.getElementById("gamestable");
-            fetch("games.php?offset=" + games_offset)
-                .then((res) => res.json())
-                .then((res) => {
-                    if (res.length == 0) {
-                        games_offset -= 10;
-                        return;
-                    }
-                    const rows = gamesTable.getElementsByTagName('tr');
-                    while (rows.length > 1) {
-                        gamesTable.deleteRow(1);
-                    }
-                    for (var i = 0; i < res.length; i++) {
-                        let row = gamesTable.insertRow();
-                        let num = row.insertCell();
-                        let timePlayed = row.insertCell();
-                        let players = row.insertCell();
-                        let winner = row.insertCell();
-                        let link = row.insertCell();
-                        let info = gameInfo(res[i]);
-                        row.className = 'inforow';
-                        num.innerHTML = (i + games_offset + 1);
-                        num.className = 'pscore';
-                        if (res[i].status == 'completed') {
-                            timePlayed.innerHTML = res[i].htime;
-                        } else {
-                            timePlayed.innerHTML = 'Playing NOW!';
-                        }
-                        timePlayed.className = 'pscore';
-                        players.innerHTML = info[0];
-                        players.className = 'pscore';
-                        winner.innerHTML = info[1];
-                        winner.className = 'pscore';
-                        link.className = 'pscore';
-                        link.style.textAlign = 'center';
-                        if (res[i].watchable) {
-                            link.innerHTML = "<a href='watch.html#" + res[i].id + "' target='_blank'><img height='20' src='tv.png'/></a>";
-                        }
-                    }
-                    processLocalTimes(gamesTable);
-                });
-        }
-
-        function showScores() {
-            const about = document.getElementById("about");
-            const download = document.getElementById("download");
-            const scores = document.getElementById("scores");
-            const contribute = document.getElementById("contribute");
-            const player = document.getElementById("player");
-            updatePlayers();
-            updateGames();
-            about.style.display = "none";
-            download.style.display = "none";
-            scores.style.display = "block";
-            contribute.style.display = "none";
-            player.style.display = "none";
-            window.location.hash = '#scores';
-        }
-
-        function closePopup() {
-            const player = document.getElementById("player");
-            player.style.display = "none";
-            window.location.hash = '#scores';
-        }
-
-        var games_of_offset = 0;
-        var shown_player = '';
-
-        function showPlayer() {
-            if (games_of_offset < 0) {
-                games_of_offset = 0;
-            }
-            let name = shown_player;
-            const about = document.getElementById("about");
-            const download = document.getElementById("download");
-            const scores = document.getElementById("scores");
-            const contribute = document.getElementById("contribute");
-            const player = document.getElementById("player");
-            const gamesOfName = document.getElementById("games-of-name");
-            const gamesTable = document.getElementById("player-games");
-            updatePlayers();
-            updateGames();
-            about.style.display = "none";
-            download.style.display = "none";
-            scores.style.display = "block";
-            contribute.style.display = "none";
-            fetch("gamesOf.php?name=" + name + "&offset=" + games_of_offset)
-                .then((res) => res.json())
-                .then((res) => {
-                    if (res.length == 0) {
-                        games_of_offset = Math.max(games_of_offset - 10, 0);
-                        return;
-                    }
-                    const rows = gamesTable.getElementsByTagName('tr');
-                    while (rows.length > 1) {
-                        gamesTable.deleteRow(1);
-                    }
-                    gamesOfName.innerHTML = 'Games of ' + name.replace("%20", " ");
-                    for (var i = 0; i < res.length; i++) {
-                        let row = gamesTable.insertRow();
-                        let num = row.insertCell();
-                        let timePlayed = row.insertCell();
-                        let players = row.insertCell();
-                        let winner = row.insertCell();
-                        let link = row.insertCell();
-                        link.className = 'pscore';
-                        let info = gameInfo(res[i]);
-                        num.innerHTML = (i + games_of_offset + 1);
-                        num.className = 'pscore';
-                        if (res[i].status == 'completed') {
-                            timePlayed.innerHTML = res[i].htime;
-                        } else {
-                            timePlayed.innerHTML = 'Playing NOW!';
-                        }
-                        timePlayed.className = 'pscore';
-                        players.innerHTML = info[0];
-                        players.className = 'pscore';
-                        winner.innerHTML = info[1];
-                        winner.className = 'pscore';
-                        link.className = 'pscore';
-                        link.style.textAlign = 'center';
-                        if (res[i].watchable) {
-                            link.innerHTML = "<a href='watch.html#" + res[i].id + "' target='_blank'><img height='20' src='tv.png'/></a>";
-                        }
-                    }
-                    processLocalTimes(gamesTable);
-                });
-            player.style.display = "block";
-            window.location.hash = '#player#' + shown_player + '#' + games_of_offset;
-        }
-
-        var lastHash = "";
-
-        function hashChanged() {
-            const hashStr = window.location.hash.substr(1);
-            if (lastHash != hashStr) {
-                const hashes = hashStr.split("#");
-                const page = hashes[0];
-                if (page == 'download') {
-                    showDownload();
-                } else if (page == 'scores') {
-                    showScores();
-                } else if (page == 'contribute') {
-                    showContribute();
-                } else if (page == 'player') {
-                    if (hashes.length > 2) {
-                        shown_player = hashes[1];
-                        games_of_offset = parseInt(hashes[2]);
-                        showPlayer();
-                    }
+                if (players_column == col) {
+                    players_sort = 1 - players_sort;
                 } else {
-                    showAbout();
+                    players_column = col;
+                    players_sort = 0;
+                }
+                updatePlayers();
+            }
+
+            function updatePlayers() {
+                if (players_offset < 0) {
+                    players_offset = 0;
+                }
+                var elements = document.getElementsByClassName('sort-arrow');
+                for (var el of elements) {
+                    el.style.display = 'none';
+                }
+                var arrow = document.getElementById("sort-" + players_column + "-" + players_sort);
+                arrow.style.display = 'block';
+                const scoresTable = document.getElementById("scorestable");
+                fetch("players.php?offset=" + players_offset + "&column=" + players_column + "&sort=" + players_sort)
+                    .then((res) => res.json())
+                    .then((res) => {
+                        if (res.length == 0) {
+                            players_offset -= 10;
+                            return;
+                        }
+                        const rows = scoresTable.getElementsByTagName('tr');
+                        while (rows.length > 1) {
+                            scoresTable.deleteRow(1);
+                        }
+                        for (var i = 0; i < res.length; i++) {
+                            let row = scoresTable.insertRow();
+                            let num = row.insertCell();
+                            let nick = row.insertCell();
+                            let wins = row.insertCell();
+                            let losses = row.insertCell();
+                            let rating = row.insertCell();
+                            row.className = 'inforow';
+                            num.className = 'pscore';
+                            num.innerHTML = (i + players_offset + 1);
+                            nick.className = 'pscore';
+                            nick.innerHTML = playerURL(res[i].nick);
+                            wins.className = 'pscore';
+                            wins.innerHTML = res[i].wins;
+                            losses.className = 'pscore';
+                            losses.innerHTML = res[i].losses;
+                            rating.className = 'pscore';
+                            rating.innerHTML = res[i].rating;
+                        }
+                        processLocalTimes(scoresTable);
+                    });
+            }
+
+            function formatTeam(arr) {
+                const counts = arr.reduce((acc, item) => {
+                    acc[item] = (acc[item] || 0) + 1;
+                    return acc;
+                }, {});
+                return Object.entries(counts).map(([item, count]) => count > 1 ? `${count} ${item} together` : item).join(' / ');
+            }
+
+            function formatAllTeams(arr) {
+                const counts = arr.reduce((acc, item) => {
+                    acc[item] = (acc[item] || 0) + 1;
+                    return acc;
+                }, {});
+                return Object.entries(counts).map(([item, count]) => count > 1 ? `${count} of (${item})` : item).join(' VS ');
+            }
+
+            function gameInfo(row) {
+                var all = '';
+                var winner = '';
+                var teams = new Map();
+                var winnerId = row['winner'];
+                var players = row['players'];
+                var grouping = new Map();
+                for (var i = 0; i < players.length; i++) {
+                    const name = players[i]['nick'];
+                    const team = players[i]['team'];
+                    if (!teams.has(team)) {
+                        teams.set(team, []);
+                    }
+                    teams.get(team).push(playerURL(name));
+                }
+                var formatted = [];
+                teams.forEach((text, team) => {
+                    formatted.push(formatTeam(text));
+                    if (winnerId == team) {
+                        winner = formatTeam(text);
+                    }
+                });
+                return [formatAllTeams(formatted), winner];
+            }
+
+            let games_offset = 0;
+
+            function updateGames() {
+                if (games_offset < 0) {
+                    games_offset = 0;
+                }
+                const gamesTable = document.getElementById("gamestable");
+                fetch("games.php?offset=" + games_offset)
+                    .then((res) => res.json())
+                    .then((res) => {
+                        if (res.length == 0) {
+                            games_offset -= 10;
+                            return;
+                        }
+                        const rows = gamesTable.getElementsByTagName('tr');
+                        while (rows.length > 1) {
+                            gamesTable.deleteRow(1);
+                        }
+                        for (var i = 0; i < res.length; i++) {
+                            let row = gamesTable.insertRow();
+                            let num = row.insertCell();
+                            let timePlayed = row.insertCell();
+                            let players = row.insertCell();
+                            let winner = row.insertCell();
+                            let link = row.insertCell();
+                            let info = gameInfo(res[i]);
+                            row.className = 'inforow';
+                            num.innerHTML = (i + games_offset + 1);
+                            num.className = 'pscore';
+                            if (res[i].status == 'completed') {
+                                timePlayed.innerHTML = res[i].htime;
+                            } else {
+                                timePlayed.innerHTML = 'Playing NOW!';
+                            }
+                            timePlayed.className = 'pscore';
+                            players.innerHTML = info[0];
+                            players.className = 'pscore';
+                            winner.innerHTML = info[1];
+                            winner.className = 'pscore';
+                            link.className = 'pscore';
+                            link.style.textAlign = 'center';
+                            if (res[i].watchable) {
+                                link.innerHTML = "<a href='watch.html#" + res[i].id + "' target='_blank'><img height='20' src='tv.png'/></a>";
+                            }
+                        }
+                        processLocalTimes(gamesTable);
+                    });
+            }
+
+            function showScores() {
+                const about = document.getElementById("about");
+                const download = document.getElementById("download");
+                const scores = document.getElementById("scores");
+                const contribute = document.getElementById("contribute");
+                const player = document.getElementById("player");
+                updatePlayers();
+                updateGames();
+                about.style.display = "none";
+                download.style.display = "none";
+                scores.style.display = "block";
+                contribute.style.display = "none";
+                player.style.display = "none";
+                window.location.hash = '#scores';
+            }
+
+            function closePopup() {
+                const player = document.getElementById("player");
+                player.style.display = "none";
+                window.location.hash = '#scores';
+            }
+
+            var games_of_offset = 0;
+            var shown_player = '';
+
+            function showPlayer() {
+                if (games_of_offset < 0) {
+                    games_of_offset = 0;
+                }
+                let name = shown_player;
+                const about = document.getElementById("about");
+                const download = document.getElementById("download");
+                const scores = document.getElementById("scores");
+                const contribute = document.getElementById("contribute");
+                const player = document.getElementById("player");
+                const gamesOfName = document.getElementById("games-of-name");
+                const gamesTable = document.getElementById("player-games");
+                updatePlayers();
+                updateGames();
+                about.style.display = "none";
+                download.style.display = "none";
+                scores.style.display = "block";
+                contribute.style.display = "none";
+                fetch("gamesOf.php?name=" + name + "&offset=" + games_of_offset)
+                    .then((res) => res.json())
+                    .then((res) => {
+                        if (res.length == 0) {
+                            games_of_offset = Math.max(games_of_offset - 10, 0);
+                            return;
+                        }
+                        const rows = gamesTable.getElementsByTagName('tr');
+                        while (rows.length > 1) {
+                            gamesTable.deleteRow(1);
+                        }
+                        gamesOfName.innerHTML = 'Games of ' + name.replace("%20", " ");
+                        for (var i = 0; i < res.length; i++) {
+                            let row = gamesTable.insertRow();
+                            let num = row.insertCell();
+                            let timePlayed = row.insertCell();
+                            let players = row.insertCell();
+                            let winner = row.insertCell();
+                            let link = row.insertCell();
+                            link.className = 'pscore';
+                            let info = gameInfo(res[i]);
+                            num.innerHTML = (i + games_of_offset + 1);
+                            num.className = 'pscore';
+                            if (res[i].status == 'completed') {
+                                timePlayed.innerHTML = res[i].htime;
+                            } else {
+                                timePlayed.innerHTML = 'Playing NOW!';
+                            }
+                            timePlayed.className = 'pscore';
+                            players.innerHTML = info[0];
+                            players.className = 'pscore';
+                            winner.innerHTML = info[1];
+                            winner.className = 'pscore';
+                            link.className = 'pscore';
+                            link.style.textAlign = 'center';
+                            if (res[i].watchable) {
+                                link.innerHTML = "<a href='watch.html#" + res[i].id + "' target='_blank'><img height='20' src='tv.png'/></a>";
+                            }
+                        }
+                        processLocalTimes(gamesTable);
+                    });
+                player.style.display = "block";
+                window.location.hash = '#player#' + shown_player + '#' + games_of_offset;
+            }
+
+            var lastHash = "";
+
+            function hashChanged() {
+                const hashStr = window.location.hash.substr(1);
+                if (lastHash != hashStr) {
+                    const hashes = hashStr.split("#");
+                    const page = hashes[0];
+                    if (page == 'download') {
+                        showDownload();
+                    } else if (page == 'scores') {
+                        showScores();
+                    } else if (page == 'contribute') {
+                        showContribute();
+                    } else if (page == 'player') {
+                        if (hashes.length > 2) {
+                            shown_player = hashes[1];
+                            games_of_offset = parseInt(hashes[2]);
+                            showPlayer();
+                        }
+                    } else {
+                        showAbout();
+                    }
+                }
+                lastHash = hashStr;
+            }
+
+            window.addEventListener('hashchange', hashChanged);
+            window.onload = function() {
+                hashChanged();
+                const imgs = document.querySelectorAll('.screenshot');
+                for (var img of imgs) {
+                    img.addEventListener('click', function(event) {
+                        window.open(event.target.src, '_blank');
+                    });
                 }
             }
-            lastHash = hashStr;
-        }
 
-        window.addEventListener('hashchange', hashChanged);
-        window.onload = function() {
-            hashChanged();
-            const imgs = document.querySelectorAll('.screenshot');
-            for (var img of imgs) {
-                img.addEventListener('click', function(event) {
-                    window.open(event.target.src, '_blank');
-                });
+            function openSteam() {
+                const url = 'https://store.steampowered.com/app/3945720/Tribal_Trouble_Resurrected/';
+                const steamUrl = 'steam://openurl/' + url;
+                const isPhone = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                if (isPhone) {
+                    window.open(url, '_blank');
+                } else {
+                    window.open(steamUrl, '_blank');
+                }
             }
-        }
-
-        function openSteam() {
-            const url = 'https://store.steampowered.com/app/3945720/Tribal_Trouble_Resurrected/';
-            const steamUrl = 'steam://openurl/' + url;
-            const isPhone = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            if (isPhone) {
-                window.open(url, '_blank');
-            } else {
-                window.open(steamUrl, '_blank');
-            }
-        }
-
-    </script>
-</head>
-
-<body>
-    <img src="new_title.png" class="title" />
-    <table class="nav_table">
-        <tr>
-            <td class="nav_button" onclick="showAbout()">About</td>
-            <td class="nav_button" onclick="showDownload()">Download</td>
-            <td class="nav_button" onclick="showScores()">Highscores</td>
-            <td class="nav_button" onclick="showContribute()">Contribute</td>
-        </tr>
-    </table>
-
-    <table class="link_table">
-        <tr>
-            <td class="link_button">
-                <a href="#" onclick="openSteam(); return false;" target="_blank">
-                    <img src="steam.png" width="100" height="100" />
-                </a>
-            </td>
-            <td class="link_button">
-                <a href="https://github.com/Tribal-Trouble/tribaltrouble" target="_blank">
-                    <img src="github.png" width="100" height="100" />
-                </a>
-            </td>
-            <td class="link_button">
-                <a href="https://discord.gg/j8PZyGBZt5" target="_blank">
-                    <img src="discord.png" width="100" height="100" />
-                </a>
-            </td>
-        </tr>
-    </table>
-
-    <div id="about" class="content">
-        <h2>Tribal Trouble: Resurrected!</h2>
-        <br/>
-        <div align="center">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/zaqGb_G3b4Y?si=0KrowXdccmyS7sas" title="Tribal Trouble: Resurrected trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <br/>
-        <h2>About</h2>
-        Tribal Trouble is a realtime strategy game released by Oddlabs in 2004. In
-        2014 the source was released under GPL2 license.<br /><br />
-        <i><b>Disclaimer:</b> This copy of Tribal Trouble is a derived work by an
-            opensource community based on the original Oddlabs version. It aims to
-            revive the original game and provide more playable features in the
-            future. The current maintainers for this version has no affiliation with
-            Oddlabs.</i><br /><br />
-
-        This is what remained of the original website:
-        <a href="https://web.archive.org/web/20070729233824/http://tribaltrouble.com" target="_blank">Archived version</a><br /><br />
-
-        <h2>The setup</h2>
-        <div class="setup-map">
-            <svg class="setup-route" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M760 70 C960 110 930 165 500 200 S70 320 250 385 S940 485 730 570 S80 700 300 770 S650 825 620 850"></path>
-            </svg>
-            <div class="setup-step">
-                <div class="setup-pin">01</div>
-                <div class="setup-card">
-                    <h3>An island in the ocean</h3>
-                    <p>The whole adventure begins on one island, surrounded by endless water.</p>
-                </div>
-                <div class="setup-images">
-                    <a href="01.jpg" target="_blank"><img src="01.jpg"></a>
-                </div>
+        </script>
+    </head>
+    <body>
+        <img src="new_title.png" class="title">
+        <table class="nav_table">
+            <tr>
+                <td class="nav_button" onclick="showAbout()">About</td>
+                <td class="nav_button" onclick="showDownload()">Download</td>
+                <td class="nav_button" onclick="showScores()">Highscores</td>
+                <td class="nav_button" onclick="showContribute()">Contribute</td>
+            </tr>
+        </table>
+        <table class="link_table">
+            <tr>
+                <td class="link_button">
+                    <a href="#" onclick="openSteam(); return false;" target="_blank">
+                        <img src="steam.png" width="100" height="100">
+                    </a>
+                </td>
+                <td class="link_button">
+                    <a href="https://github.com/Tribal-Trouble/tribaltrouble" target="_blank">
+                        <img src="github.png" width="100" height="100">
+                    </a>
+                </td>
+                <td class="link_button">
+                    <a href="https://discord.gg/j8PZyGBZt5" target="_blank">
+                        <img src="discord.png" width="100" height="100">
+                    </a>
+                </td>
+            </tr>
+        </table>
+        <div id="about" class="content">
+            <h2 style="text-align: center;">Tribal Trouble: Resurrected!</h2>
+            <div align="center">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/zaqGb_G3b4Y?si=0KrowXdccmyS7sas" title="Tribal Trouble: Resurrected trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
-            <div class="setup-step">
-                <div class="setup-pin">02</div>
-                <div class="setup-card">
-                    <h3>Different tribes</h3>
-                    <p>Native tribes and Vikings share the island, but they won't share it peacefully.</p>
+            <h2 style="text-align: center;">About</h2>
+            <p>Tribal Trouble is a realtime strategy game released by Oddlabs in 2004. In
+            2014 the source was released under GPL2 license.</p>
+            <p><i><b>Disclaimer:</b> This copy of Tribal Trouble is a derived work by an
+                opensource community based on the original Oddlabs version. It aims to
+                revive the original game and provide more playable features in the
+                future. The current maintainers for this version has no affiliation with
+                Oddlabs.</i></p>
+            <p>This is what remained of the original website: <a href="https://web.archive.org/web/20070729233824/http://tribaltrouble.com" target="_blank">Archived version</a></p>
+            <h2 style="text-align: center;">The setup</h2>
+            <div class="setup-map">
+                <svg class="setup-route" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M760 70 C960 110 930 165 500 200 S70 320 250 385 S940 485 730 570 S80 700 300 770 S650 825 620 850"></path>
+                </svg>
+                <div class="setup-step">
+                    <div class="setup-pin">01</div>
+                    <div class="setup-card">
+                        <h3>An island in the ocean</h3>
+                        <p>The whole adventure begins on one island, surrounded by endless water.</p>
+                    </div>
+                    <div class="setup-images">
+                        <a href="01.jpg" target="_blank"><img src="01.jpg"></a>
+                    </div>
                 </div>
-                <div class="setup-images">
-                    <a href="11.jpg" target="_blank"><img src="11.jpg"></a>
-                    <a href="02.jpg" target="_blank"><img src="02.jpg"></a>
+                <div class="setup-step">
+                    <div class="setup-pin">02</div>
+                    <div class="setup-card">
+                        <h3>Different tribes</h3>
+                        <p>Native tribes and Vikings share the island, but they won't share it peacefully.</p>
+                    </div>
+                    <div class="setup-images">
+                        <a href="11.jpg" target="_blank"><img src="11.jpg"></a>
+                        <a href="02.jpg" target="_blank"><img src="02.jpg"></a>
+                    </div>
                 </div>
-            </div>
-            <div class="setup-step">
-                <div class="setup-pin">03</div>
-                <div class="setup-card">
-                    <h3>Build your colonies</h3>
-                    <p>Establish settlements and turn a small foothold into a growing base.</p>
+                <div class="setup-step">
+                    <div class="setup-pin">03</div>
+                    <div class="setup-card">
+                        <h3>Build your colonies</h3>
+                        <p>Establish settlements and turn a small foothold into a growing base.</p>
+                    </div>
+                    <div class="setup-images">
+                        <a href="03.jpg" target="_blank"><img src="03.jpg"></a>
+                    </div>
                 </div>
-                <div class="setup-images">
-                    <a href="03.jpg" target="_blank"><img src="03.jpg"></a>
+                <div class="setup-step">
+                    <div class="setup-pin">04</div>
+                    <div class="setup-card">
+                        <h3>Collect resources</h3>
+                        <p>Gather what your people need to keep expanding and prepare for what's next.</p>
+                    </div>
+                    <div class="setup-images">
+                        <a href="04.jpg" target="_blank"><img src="04.jpg"></a>
+                        <a href="05.jpg" target="_blank"><img src="05.jpg"></a>
+                    </div>
                 </div>
-            </div>
-            <div class="setup-step">
-                <div class="setup-pin">04</div>
-                <div class="setup-card">
-                    <h3>Collect resources</h3>
-                    <p>Gather what your people need to keep expanding and prepare for what's next.</p>
+                <div class="setup-step">
+                    <div class="setup-pin">05</div>
+                    <div class="setup-card">
+                        <h3>Build your armies</h3>
+                        <p>Grow your forces, because the other tribes are doing the same.</p>
+                    </div>
+                    <div class="setup-images">
+                        <a href="06.jpg" target="_blank"><img src="06.jpg"></a>
+                    </div>
                 </div>
-                <div class="setup-images">
-                    <a href="04.jpg" target="_blank"><img src="04.jpg"></a>
-                    <a href="05.jpg" target="_blank"><img src="05.jpg"></a>
-                </div>
-            </div>
-            <div class="setup-step">
-                <div class="setup-pin">05</div>
-                <div class="setup-card">
-                    <h3>Build your armies</h3>
-                    <p>Grow your forces, because the other tribes are doing the same.</p>
-                </div>
-                <div class="setup-images">
-                    <a href="06.jpg" target="_blank"><img src="06.jpg"></a>
-                </div>
-            </div>
-            <div class="setup-step">
-                <div class="setup-pin">06</div>
-                <div class="setup-card">
-                    <h3>Fight for the island</h3>
-                    <p>In the end, every tribe wants control. The route leads to war.</p>
-                </div>
-                <div class="setup-images">
-                    <a href="07.jpg" target="_blank"><img src="07.jpg"></a>
-                    <a href="08.jpg" target="_blank"><img src="08.jpg"></a>
-                    <a href="09.jpg" target="_blank"><img src="09.jpg"></a>
-                    <a href="10.jpg" target="_blank"><img src="10.jpg"></a>
+                <div class="setup-step">
+                    <div class="setup-pin">06</div>
+                    <div class="setup-card">
+                        <h3>Fight for the island</h3>
+                        <p>In the end, every tribe wants control. The route leads to war.</p>
+                    </div>
+                    <div class="setup-images">
+                        <a href="07.jpg" target="_blank"><img src="07.jpg"></a>
+                        <a href="08.jpg" target="_blank"><img src="08.jpg"></a>
+                        <a href="09.jpg" target="_blank"><img src="09.jpg"></a>
+                        <a href="10.jpg" target="_blank"><img src="10.jpg"></a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div id="show-image" class="popup"></div>
-
-
-    <div id="download" class="content">
-        <h2>Launch it on Steam</h2>
-        <a href="#" onclick="openSteam(); return false;" target="_blank">
-            <img src="steam.png" width="85" height="85" class='downloadable' />
-        </a>
-        <br><br>
-        <h2>Download binaries</h2>
-        <table>
-            <tr>
-                <td class='downloadable'>
-                    <a href="linux.zip">
-                        <img src='linux.png' class='os-logo' />
-                    </a>
-                </td>
-                <td class='downloadable'>
-                    <a href="windows.zip">
-                        <img src='windows.png' class='os-logo' />
-                    </a>
-                </td>
-                <td class='downloadable'>
-                    <a href="mac-x86.zip">
-                        <img src='mac-x86.png' class='os-logo' />
-                    </a>
-                </td>
-                <td class='downloadable'>
-                    <a href="mac-arm64.zip">
-                        <img src='mac-arm.png' class='os-logo' />
-                    </a>
-                </td>
-            </tr>
-            <tr>
-                <td class='downloadable'><a href="linux.zip">Linux</a></td>
-                <td class='downloadable'><a href="windows.zip">Windows</a></td>
-                <td class='downloadable'><a href="mac-x86.zip">Mac x86</a></td>
-                <td class='downloadable'><a href="mac-arm64.zip">Mac ARM</a></td>
-            </tr>
-        </table>
-        <br>
-        <h2>Build it from the source</h2>
-        Clone this
-        <a href="https://github.com/Tribal-Trouble/tribaltrouble">github repository</a>
-        and follow the build instructions in the README file.
-    </div>
-
-    <div id="scores" class="content">
-        <h2>Top Players</h2>
-        <table id='scorestable'>
-            <tr>
-                <th></th>
-                <th class='tableheader'>Player</th>
-                <th class='tableheader' onclick='sortBy(0)'>
-                    Won games
-                    <img class='sort-arrow' id='sort-0-1' src='up-arrow.png' />
-                    <img class='sort-arrow' id='sort-0-0' src='down-arrow.png' />
-                </th>
-                <th class='tableheader' onclick='sortBy(1)'>
-                    Lost games
-                    <img class='sort-arrow' id='sort-1-1' src='up-arrow.png' />
-                    <img class='sort-arrow' id='sort-1-0' src='down-arrow.png' />
-                </th>
-                <th class='tableheader' onclick='sortBy(2)'>
-                    Rating
-                    <img class='sort-arrow' id='sort-2-1' src='up-arrow.png' />
-                    <img class='sort-arrow' id='sort-2-0' src='down-arrow.png' />
-                </th>
-            </tr>
-        </table>
-        <img src='reset-btn.png' onclick='players_offset = 0; updatePlayers()' />
-        <img src='prev-btn.png' onclick='players_offset -= 10; updatePlayers()' />
-        <img src='next-btn.png' onclick='players_offset += 10; updatePlayers()' />
-        <h2>Recent Games</h2>
-        <table id='gamestable'>
-            <tr>
-                <th></th>
-                <th class='tableheader'>Time</th>
-                <th class='tableheader'>Players</th>
-                <th class='tableheader'>Winner</th>
-                <th class='tableheader'>Watch Link</th>
-            </tr>
-        </table>
-        <img src='reset-btn.png' onclick='games_offset = 0; updateGames()' />
-        <img src='prev-btn.png' onclick='games_offset -= 10; updateGames()' />
-        <img src='next-btn.png' onclick='games_offset += 10; updateGames()' />
-    </div>
-
-    <div id="player" class="popup">
-        <img src='x-btn.png' class='popup-btn' onclick='closePopup()' />
-        <h2 id='games-of-name'></h2>
-        <table id='player-games'>
-            <tr>
-                <th></th>
-                <th class='tableheader'>Time</th>
-                <th class='tableheader'>Players</th>
-                <th class='tableheader'>Winner</th>
-                <th class='tableheader'>Watch Link</th>
-            </tr>
-        </table>
-        <img src='reset-btn.png' onclick='games_of_offset = 0; showPlayer()' />
-        <img src='prev-btn.png' onclick='games_of_offset -= 10; showPlayer()' />
-        <img src="next-btn.png" onclick='games_of_offset += 10; showPlayer()' />
-    </div>
-
-    <div id="contribute" class="content">
-        <h2>Contribute</h2>
-
-        Everybody is welcome to maintain and contribute. There's still a lot of
-        work to be done.<br /><br />
-
-        This is the fork used at the moment if you want to get familiar with the
-        source code:
-        <a href="https://github.com/Tribal-Trouble/tribaltrouble" target="_blank"><img width="20" height="20" src="github.png" /> Github repository</a>
-        <br /><br />
-        Join our discussion on discord!
-        <a href="https://discord.gg/j8PZyGBZt5" target="_blank"><img width="20" height="20" src="discord.png" /> Discord server</a>
-    </div>
-</body>
+        <div id="show-image" class="popup"></div>
+        <div id="download" class="content">
+            <h2>Launch it on Steam</h2>
+            <a href="#" onclick="openSteam(); return false;" target="_blank">
+                <img src="steam.png" width="85" height="85" class='downloadable'>
+            </a>
+            <h2>Download binaries</h2>
+            <table>
+                <tr>
+                    <td class='downloadable'>
+                        <a href="linux.zip">
+                            <img src='linux.png' class='os-logo'>
+                        </a>
+                    </td>
+                    <td class='downloadable'>
+                        <a href="windows.zip">
+                            <img src='windows.png' class='os-logo'>
+                        </a>
+                    </td>
+                    <td class='downloadable'>
+                        <a href="mac-x86.zip">
+                            <img src='mac-x86.png' class='os-logo'>
+                        </a>
+                    </td>
+                    <td class='downloadable'>
+                        <a href="mac-arm64.zip">
+                            <img src='mac-arm.png' class='os-logo'>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='downloadable'><a href="linux.zip">Linux</a></td>
+                    <td class='downloadable'><a href="windows.zip">Windows</a></td>
+                    <td class='downloadable'><a href="mac-x86.zip">Mac x86</a></td>
+                    <td class='downloadable'><a href="mac-arm64.zip">Mac ARM</a></td>
+                </tr>
+            </table>
+            <h2>Build it from the source</h2>
+            <p>Clone this <a href="https://github.com/Tribal-Trouble/tribaltrouble">github repository</a> and follow the build instructions in the README file.</p>
+        </div>
+        <div id="scores" class="content">
+            <h2>Top Players</h2>
+            <table id='scorestable'>
+                <tr>
+                    <th></th>
+                    <th class='tableheader'>Player</th>
+                    <th class='tableheader' onclick='sortBy(0)'>
+                        Won games
+                        <img class='sort-arrow' id='sort-0-1' src='up-arrow.png'>
+                        <img class='sort-arrow' id='sort-0-0' src='down-arrow.png'>
+                    </th>
+                    <th class='tableheader' onclick='sortBy(1)'>
+                        Lost games
+                        <img class='sort-arrow' id='sort-1-1' src='up-arrow.png'>
+                        <img class='sort-arrow' id='sort-1-0' src='down-arrow.png'>
+                    </th>
+                    <th class='tableheader' onclick='sortBy(2)'>
+                        Rating
+                        <img class='sort-arrow' id='sort-2-1' src='up-arrow.png'>
+                        <img class='sort-arrow' id='sort-2-0' src='down-arrow.png'>
+                    </th>
+                </tr>
+            </table>
+            <img src='reset-btn.png' onclick='players_offset = 0; updatePlayers()'>
+            <img src='prev-btn.png' onclick='players_offset -= 10; updatePlayers()'>
+            <img src='next-btn.png' onclick='players_offset += 10; updatePlayers()'>
+            <h2>Recent Games</h2>
+            <table id='gamestable'>
+                <tr>
+                    <th></th>
+                    <th class='tableheader'>Time</th>
+                    <th class='tableheader'>Players</th>
+                    <th class='tableheader'>Winner</th>
+                    <th class='tableheader'>Watch Link</th>
+                </tr>
+            </table>
+            <img src='reset-btn.png' onclick='games_offset = 0; updateGames()'>
+            <img src='prev-btn.png' onclick='games_offset -= 10; updateGames()'>
+            <img src='next-btn.png' onclick='games_offset += 10; updateGames()'>
+        </div>
+        <div id="player" class="popup">
+            <img src='x-btn.png' class='popup-btn' onclick='closePopup()'>
+            <h2 id='games-of-name'></h2>
+            <table id='player-games'>
+                <tr>
+                    <th></th>
+                    <th class='tableheader'>Time</th>
+                    <th class='tableheader'>Players</th>
+                    <th class='tableheader'>Winner</th>
+                    <th class='tableheader'>Watch Link</th>
+                </tr>
+            </table>
+            <img src='reset-btn.png' onclick='games_of_offset = 0; showPlayer()'>
+            <img src='prev-btn.png' onclick='games_of_offset -= 10; showPlayer()'>
+            <img src="next-btn.png" onclick='games_of_offset += 10; showPlayer()'>
+        </div>
+        <div id="contribute" class="content">
+            <h2 style="text-align: center;">Contribute</h2>
+            <p style="text-align: center;">Everybody is welcome to maintain and contribute. There's still a lot of work to be done.</p>
+            <div class="credits">
+                <div class="credits-root">
+                    <b>Tribal Trouble: Resurrected</b>
+                    <span>Has been made possible by the work of volunteers since August 2025</span>
+                </div>
+                <div class="credits-tree">
+                    <div class="credits-branch">
+                        <div class="credits-card">
+                            <div class="credits-head">Programming</div>
+                            <ul class="credits-list">
+                                <li>Ryan Linehan <span class="nick">RcubDev</span></li>
+                                <li>Bondolo</li>
+                                <li>Omar Mokhtar</li>
+                                <li>Merikrotti</li>
+                                <li>Ian Andrew Moore<span class="nick">Dapiankid</span></li>
+                                <li>Maxime Michon<span class="nick">Maxenor</span></li>
+                                <li>Pyprohly</li>
+                                <li>TimmyTonkaBuilder</li>
+                                <li>Xzf</li>
+                                <li>Rafał Okuniewski<span class="nick">Goliat</span></li>
+                                <li>Kornel Zimniak<span class="nick">Seriton</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="credits-branch">
+                        <div class="credits-card">
+                            <div class="credits-head">3D Graphics and Animations</div>
+                            <ul class="credits-list">
+                                <li>Chaz Willets</li>
+                                <li>Camersteph</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="credits-branch">
+                        <div class="credits-card">
+                            <div class="credits-head">Translations</div>
+                            <ul class="credits-list">
+                                <li>Daniel Araújo Nacarini<span class="nick">Piratax10</span></li>
+                                <li>Rafał Okuniewski<span class="nick">Goliat</span></li>
+                                <li>Kornel Zimniak<span class="nick">Seriton</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="credits-branch">
+                        <div class="credits-card">
+                            <div class="credits-head">Community</div>
+                            <ul class="credits-list">
+                                <li>Ian Andrew Moore<span class="nick">Dapiankid</span></li>
+                                <li>Ryan Linehan<span class="nick">RcubDev</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="credits-links">
+                <p>This is the fork used at the moment if you want to get familiar with the source code:
+                <a href="https://github.com/Tribal-Trouble/tribaltrouble" target="_blank"><img width="20" height="20" src="github.png"> Github repository</a></p>
+                <p>Join our discussion on discord!
+                <a href="https://discord.gg/j8PZyGBZt5" target="_blank"><img width="20" height="20" src="discord.png"> Discord server</a></p>
+            </div>
+        </div>
+    </body>
 </html>
